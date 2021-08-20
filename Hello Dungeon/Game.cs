@@ -6,13 +6,22 @@ namespace Hello_Dungeon
 {
     class Game
     {
+        int health = 100;
+        int sanity = 100;
+        float infection = 1;
+
+        void PrintPlayerStats()
+        {
+            Console.WriteLine("----------------------------");
+            Console.WriteLine("Health: " + health);
+            Console.WriteLine("Sanity: " + sanity);
+            Console.WriteLine("[REDACTED]: " + infection);
+            Console.WriteLine("----------------------------");
+        }
         public void Run()
         {
             //Initialize variables
             int healthRegen = 50;
-            int health = 100;
-            int sanity = 100;
-            float infection = 1;
             string name = "Empty";
             string medkit = "";
             string weaponAsk = "";
@@ -37,7 +46,8 @@ namespace Hello_Dungeon
             Console.Write("Hello {user}. Please enter your name: ");
             name = Console.ReadLine();
             Console.WriteLine("");
-            Console.WriteLine("Hello " + name + "! Your health is " + health + ", your sanity is " + sanity + ", and your [REDACTED] is " + infection + ".");
+            Console.WriteLine("Welcome to the game " + name + ".\n 'Death teaches th1ngs about l1fe in a way that life never can' - [REDACTED]\n");
+            PrintPlayerStats();
 
             //Ask if player wants a weapon
             Console.WriteLine("");
@@ -83,7 +93,7 @@ namespace Hello_Dungeon
 
                 if (run == "Y")
                 {
-                    Console.WriteLine("You run away, blind and alone. [REDACTED] has a way of finding those lost. But you are safe for now.");
+                    Console.WriteLine("\nYou run away, blind and alone. [REDACTED] has a way of finding those lost. But you are safe for now.");
                     infection += 20;
                     validInputRecieved = true;
                 }
@@ -222,22 +232,23 @@ namespace Hello_Dungeon
                     string leaveBuilding = Console.ReadLine();
                     if (leaveBuilding == "1")
                     {
+                        i = 0;
                         break;
                     }
                     else if (leaveBuilding == "2")
                     {
-
+                        validInputRecieved = true;
+                        Console.WriteLine("You decide to push forward to the next room.");
+                        Console.WriteLine("Press ENTER to continue");
+                        Console.ReadKey();
+                        Console.Clear();
                     }
                     else
                     {
                         Console.WriteLine("ERROR | That is not a valid answer. Try again. | ERROR\n");
                     }
                 }
-                
-                Console.WriteLine("You decide to push forward to the next room.");
-                Console.WriteLine("Press ENTER to continue");
-                Console.ReadKey();
-                Console.Clear();
+                validInputRecieved = false;
             }
             Console.WriteLine("You trace your steps back through the building a come back out the way you came.");
 
