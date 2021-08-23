@@ -14,14 +14,52 @@ namespace Hello_Dungeon
         string run = "";
         string name = "";
         bool weapon = false;
-        string weaponAsk = "";
-        string continueGame = "";
+        bool gameOver = true;
 
-        int Getinput(string description, int choice1, int choice2)
+        /// <summary>
+        /// Getting input from the player at any point in the code
+        /// </summary>
+        /// <param name="description"></param>
+        /// <param name="choice1"></param>
+        /// <param name="choice2"></param>
+        /// <returns></returns>
+        int GetInput(string description, string choice1, string choice2)
         {
+            string input = "";
+            int inputRecieved = 0;
 
+            while (!(inputRecieved == 1 || inputRecieved == 2))
+            {
+                Console.WriteLine(description);
+                Console.WriteLine("1. " + choice1);
+                Console.WriteLine("2. " + choice2);
+                Console.Write("> ");
+
+                input = Console.ReadLine();
+
+                if (input == "1" || input == choice1)
+                {
+                    inputRecieved = 1;
+                }
+                else if (input == "2" || input == choice2)
+                {
+                    inputRecieved = 2;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid Input");
+                    Console.ReadKey();
+                }
+
+                Console.Clear();
+            }
+
+            return inputRecieved;
         }
 
+        /// <summary>
+        /// Prints player stats neatly in a box
+        /// </summary>
         void PrintPlayerStats()
         {
             Console.WriteLine("----------------------------");
@@ -32,7 +70,20 @@ namespace Hello_Dungeon
             Console.WriteLine("");
         }
 
-        void PlayerStatsCheck
+        /// <summary>
+        /// If player is dead it returns false
+        /// If alive it returns true
+        /// </summary>
+        /// <returns></returns>
+        bool PlayerIsAlive()
+        {
+            if (health <= 0 || sanity <= 0)
+            {
+                Console.WriteLine("You have perished\n");
+                return false;
+            }
+            return true;
+        }
 
         void StartMenu()
         {
@@ -45,41 +96,28 @@ namespace Hello_Dungeon
             Console.Write("Hello {user}. Please enter your name: ");
             name = Console.ReadLine();
             Console.WriteLine("");
-            Console.WriteLine("Welcome to the game " + name + ".\n 'Death teaches th1ngs about l1fe in a way that life never can' - [REDACTED]\n");
+            Console.WriteLine("Welcome to the game " + name + ".\n'Death teaches th1ngs about l1fe in a way that life never can' - [REDACTED]\n");
             PrintPlayerStats();
-
-            //Ask if player wants a weapon
-            Console.WriteLine("");
         }
-
+        /// <summary>
+        /// Asks the player if they choose to have a weapon or not
+        /// Sets the weapon variable to true if the player takes a weapon
+        /// </summary>
         void AskForWeapon()
         {
-            validInputRecieved = false;
-            while (validInputRecieved == false)
+            int input = GetInput("Would you like a weapon?", "Yes", "No");
+
+            if (input == 1)
             {
-                Console.Write("Would you like a weapon? (Y/N): ");
-                weaponAsk = Console.ReadLine();
-                Console.WriteLine("");
+                weapon = true;
+                Console.WriteLine("Good choice " + name + "... Survival is key here..");
+                Console.WriteLine("*You have picked up a small dagger*\n");
+            }
 
-                //Weapon Check
-                if (weaponAsk == "Y")
-                {
-                    weapon = true;
-                    Console.WriteLine("Good choice " + name + "... Survival is key here..");
-                    Console.WriteLine("*You have picked up a small dagger*\n");
-                    validInputRecieved = true;
-                }
-
-                else if (weaponAsk == "N")
-                {
-                    weapon = false;
-                    Console.WriteLine("Hmmm, thats a choice " + name + "... Not a very good one if [REDACTED] comes for you.\n");
-                    validInputRecieved = true;
-                }
-                else
-                {
-                    Console.WriteLine("ERROR | That is not a valid answer. Try again. | ERROR\n");
-                }
+            else if (input == 2)
+            {
+                weapon = false;
+                Console.WriteLine("Hmmm, thats a choice " + name + "... Not a very good one if [REDACTED] comes for you.\n");
             }
         }
 
@@ -89,54 +127,54 @@ namespace Hello_Dungeon
         void FirstEncounter()
         {
             validInputRecieved = false;
-            while (validInputRecieved == false)
+
+            int run = GetInput("Do you want to run away?", "Yes", "No");
+
+            if (run == 1)
             {
-                Console.Write("Do you want to run away? (Y/N): ");
-                run = Console.ReadLine();
+                Console.WriteLine("\nYou run away, blind and alone. [REDACTED] has a way of finding those lost. But you are safe for now.");
+                Console.WriteLine("\nPress ENTER to continue");
+                Console.ReadKey();
+                Console.Clear();
+                infection += 20;
+                validInputRecieved = true;
+            }
 
-                if (run == "Y")
+            //The monster actually attacks
+            else if (run == 2)
+            {
+                Console.WriteLine("[REDACTED] is coming. You have no escape\n");
+                if (weapon)
                 {
-                    Console.WriteLine("\nYou run away, blind and alone. [REDACTED] has a way of finding those lost. But you are safe for now.");
-                    infection += 20;
-                    validInputRecieved = true;
-                }
-
-                //The monster actually attacks
-                else if (run == "N")
-                {
-                    Console.WriteLine("[REDACTED] is coming. You have no escape\n");
-                    if (weapon)
-                    {
-                        Console.WriteLine("Ah you have a weapon. You may fight. ");
-                        Console.WriteLine("");
-                        Console.WriteLine("You slash and hack through [REDACTED] spewing [REDCATED] blood all over the walls. You take mild injuries.");
-                        Console.WriteLine("");
-                        Console.WriteLine("SUSTAIN 15 DAMAGE");
-                        Console.WriteLine("SUSTAIN 20 SANITY LOSS");
-                        health -= 15;
-                        sanity -= 20;
-                        infection += 5;
-                        validInputRecieved = true;
-                    }
-                    else
-                    {
-                        Console.WriteLine("");
-                        Console.WriteLine("No weapon either... Only god can save you now");
-                        Console.WriteLine("");
-                        Console.WriteLine("You sit alone in the dark until you feel a soft hand on your shoulder. You look up and see a familiar face.");
-                        Console.WriteLine("[REDACTED] lulls you in and attacks. You take severe injuries. [REDACTED] loves playing with prey.");
-                        Console.WriteLine("");
-                        Console.WriteLine("SUSTAIN 60 DAMAGE");
-                        Console.WriteLine("SUSTAIN 40 SANITY LOSS");
-                        health -= 60;
-                        sanity -= 40;
-                        infection += 5;
-                        validInputRecieved = true;
-                    }
+                    Console.WriteLine("Ah you have a weapon. You may fight. ");
+                    Console.WriteLine("");
+                    Console.WriteLine("You slash and hack through [REDACTED] spewing [REDCATED] blood all over the walls. You take mild injuries.");
+                    Console.WriteLine("");
+                    Console.WriteLine("SUSTAIN 15 DAMAGE");
+                    Console.WriteLine("SUSTAIN 20 SANITY LOSS");
+                    Console.WriteLine("\nPress ENTER to continue");
+                    Console.ReadKey();
+                    Console.Clear();
+                    health -= 15;
+                    sanity -= 20;
+                    infection += 5;
                 }
                 else
                 {
-                    Console.WriteLine("ERROR | That is not a valid answer. Try again. | ERROR\n");
+                    Console.WriteLine("");
+                    Console.WriteLine("No weapon either... Only god can save you now");
+                    Console.WriteLine("");
+                    Console.WriteLine("You sit alone in the dark until you feel a soft hand on your shoulder. You look up and see a familiar face.");
+                    Console.WriteLine("[REDACTED] lulls you in and attacks. You take severe injuries. [REDACTED] loves playing with prey.");
+                    Console.WriteLine("");
+                    Console.WriteLine("SUSTAIN 60 DAMAGE");
+                    Console.WriteLine("SUSTAIN 40 SANITY LOSS");
+                    Console.WriteLine("\nPress ENTER to continue");
+                    Console.ReadKey();
+                    Console.Clear();
+                    health -= 60;
+                    sanity -= 40;
+                    infection += 5;
                 }
             }
         }
@@ -210,10 +248,17 @@ namespace Hello_Dungeon
                     weapon = true;
                 }
                 Console.WriteLine("");
-                Console.WriteLine(" Your health is " + health + ", your sanity is " + sanity + ", and your [REDACTED] is " + infection + ".\n");
+
+                PrintPlayerStats();
+
+                //If the player is dead the function breaks and goes directly to the RestartGame function
+                if (PlayerIsAlive() == false)
+                {
+                    return;
+                }
                 while (validInputRecieved == false)
                 {
-                    Console.Write("You only have time to search " + (i-1) +" more rooms. Would you like to \n1. Leave this building?\n2. Keep searching \n(1/2): ");
+                    Console.Write("You only have time to search " + (i-1) +" more rooms. Would you like to \n1. Leave this building?\n2. Keep searching \n> ");
                     string leaveBuilding = Console.ReadLine();
                     if (leaveBuilding == "1")
                     {
@@ -223,7 +268,7 @@ namespace Hello_Dungeon
                     else if (leaveBuilding == "2")
                     {
                         validInputRecieved = true;
-                        Console.WriteLine("You decide to push forward to the next room.");
+                        Console.WriteLine("\nYou decide to push forward to the next room.");
                         Console.WriteLine("Press ENTER to continue");
                         Console.ReadKey();
                         Console.Clear();
@@ -236,14 +281,34 @@ namespace Hello_Dungeon
                 validInputRecieved = false;
             }
         }
+
+        /// <summary>
+        /// Asks if player would like to restart game
+        /// </summary>
+        void RestartGame()
+        {
+            int continueGame = GetInput("This is all there is in the BETA build. Would you like to restart?", "Yes", "No");
+
+            if (continueGame == 1)
+            {
+                Console.WriteLine("\nYou have chosen to restart. [REDACTED] reaches out and you grab it's hand. \n'It is time to reboot you now, little one'\n");
+                Console.WriteLine("Press ENTER to continue");
+                Console.ReadKey();
+                Console.Clear();
+            }
+            else if (continueGame == 2)
+            {
+                gameOver = false;
+            }
+        }
         
         public void Run()
         {
-            health = 100;
-            sanity = 100;
-            string continueGame = "";
-            while (continueGame != "N")
+            while (gameOver != false)
             {
+                health = 100;
+                sanity = 100;
+
                 StartMenu();
 
                 AskForWeapon();
@@ -256,7 +321,6 @@ namespace Hello_Dungeon
                 FirstEncounter();
 
                 //End of stage 1
-                Console.WriteLine("");
                 Console.WriteLine("---------------------------------------");
                 Console.WriteLine("-------------END OF STAGE 1------------");
                 Console.WriteLine("---------------------------------------");
@@ -275,34 +339,11 @@ namespace Hello_Dungeon
                 Console.ReadKey();
                 Console.Clear();
 
-                Console.WriteLine("You run away and find yourself upon an old building. You hear footsteps behind you. You rush forward into the first room.\n");
-
                 RoomJourney();
 
-                Console.WriteLine("You trace your steps back through the building and come back out the way you came.");
                 Console.WriteLine("");
-                Console
-                while (validInputRecieved == false)
-                {
-                    Console.Write("This is all there is in this beta build. Would you like to restart? (Y/N): ");
-                    continueGame = Console.ReadLine();
-                    if (continueGame == "Y")
-                    {
-                        Console.WriteLine("\nYou have chosen to restart. [REDACTED] reaches out and you grab it's hand. \n'It is time to reboot you now, little one'\n");
-                        Console.WriteLine("Press ENTER to continue");
-                        Console.ReadKey();
-                        Console.Clear();
-                        validInputRecieved = true;
-                    }
-                    else if (continueGame == "N")
-                    {
 
-                    }
-                    else
-                    {
-                        Console.WriteLine("ERROR | That is not a valid answer. Try again. | ERROR\n");
-                    }
-                }
+                RestartGame();
             }
             
 
