@@ -6,9 +6,21 @@ namespace Hello_Dungeon
 {
     class Game
     {
+        //Initialize variables
         int health = 100;
         int sanity = 100;
         float infection = 1;
+        bool validInputRecieved = false;
+        string run = "";
+        string name = "";
+        bool weapon = false;
+        string weaponAsk = "";
+        string continueGame = "";
+
+        int Getinput(string description, int choice1, int choice2)
+        {
+
+        }
 
         void PrintPlayerStats()
         {
@@ -17,26 +29,13 @@ namespace Hello_Dungeon
             Console.WriteLine("Sanity: " + sanity);
             Console.WriteLine("[REDACTED]: " + infection);
             Console.WriteLine("----------------------------");
+            Console.WriteLine("");
         }
-        public void Run()
+
+        void PlayerStatsCheck
+
+        void StartMenu()
         {
-            //Initialize variables
-            int healthRegen = 50;
-            string name = "Empty";
-            string medkit = "";
-            string weaponAsk = "";
-            string run = "";
-            bool weapon = false;
-            bool validInputRecieved = false;
-
-
-            //Injury Check
-            if (medkit == "Y")
-            {
-                health = 100;
-                Console.WriteLine("You have been healed.");
-            }
-    
             //Welcome screen
             Console.WriteLine("H- Hello? Is anyone there?? Please!");
             Console.WriteLine("I can't let this m- maachine take over my mi-");
@@ -51,7 +50,11 @@ namespace Hello_Dungeon
 
             //Ask if player wants a weapon
             Console.WriteLine("");
+        }
 
+        void AskForWeapon()
+        {
+            validInputRecieved = false;
             while (validInputRecieved == false)
             {
                 Console.Write("Would you like a weapon? (Y/N): ");
@@ -78,15 +81,15 @@ namespace Hello_Dungeon
                     Console.WriteLine("ERROR | That is not a valid answer. Try again. | ERROR\n");
                 }
             }
+        }
 
+        /// <summary>
+        /// Asks user if they want to run away and initiates combat
+        /// </summary>
+        void FirstEncounter()
+        {
             validInputRecieved = false;
-            Console.WriteLine("...");
-            Console.WriteLine("Do you hear that?");
-            Console.WriteLine("");
-
-            //The monster starts to sense the player
-
-        while (validInputRecieved == false)
+            while (validInputRecieved == false)
             {
                 Console.Write("Do you want to run away? (Y/N): ");
                 run = Console.ReadLine();
@@ -136,28 +139,10 @@ namespace Hello_Dungeon
                     Console.WriteLine("ERROR | That is not a valid answer. Try again. | ERROR\n");
                 }
             }
+        }
 
-            //End of stage 1
-            Console.WriteLine("");
-            Console.WriteLine("---------------------------------------");
-            Console.WriteLine("-------------END OF STAGE 1------------");
-            Console.WriteLine("---------------------------------------");
-            Console.WriteLine("");
-            Console.WriteLine("Health: " + health);
-            Console.WriteLine("Sanity: " + sanity);
-            Console.WriteLine("[REDACTED]: " + infection);
-            Console.WriteLine("");
-            Console.WriteLine("Press ENTER to continue");
-            Console.ReadKey();
-            Console.Clear();
-
-            Console.WriteLine("---------------------------------------");
-            Console.WriteLine("------------START OF STAGE 2-----------");
-            Console.WriteLine("---------------------------------------");
-            Console.WriteLine("");
-
-            Console.WriteLine("You run away and find yourself upon an old building. You hear footsteps behind you. You rush forward into the first room.\n");
-
+        void RoomJourney()
+        {
             validInputRecieved = false;
 
             //Random Room Generator
@@ -195,8 +180,8 @@ namespace Hello_Dungeon
                 }
                 else if (room1 == 2)
                 {
-                    Console.WriteLine("You walk in to a room with a roaring fireplace and lush carpets. On the table you find a medkit and heal 50 health!");
-                    health += 50;
+                    Console.WriteLine("You walk in to a room with a roaring fireplace and lush carpets. On the table you find a medkit and heal 20 health!");
+                    health += 20;
                     if (health > 100)
                     {
                         health = 100;
@@ -204,8 +189,8 @@ namespace Hello_Dungeon
                 }
                 else if (room1 == 3)
                 {
-                    Console.WriteLine("You enter in a sanctuary of sorts. There are pews, symbolic pieces, and scripture on the walls. It feels safe. You regain 50 sanity.");
-                    sanity += 50;
+                    Console.WriteLine("You enter in a sanctuary of sorts. There are pews, symbolic pieces, and scripture on the walls. It feels safe. You regain 20 sanity.");
+                    sanity += 20;
                     if (sanity > 100)
                     {
                         sanity = 100;
@@ -228,7 +213,7 @@ namespace Hello_Dungeon
                 Console.WriteLine(" Your health is " + health + ", your sanity is " + sanity + ", and your [REDACTED] is " + infection + ".\n");
                 while (validInputRecieved == false)
                 {
-                    Console.Write("You only have time to search " + i +" more rooms. Would you like to \n1. Leave this building?\n2. Keep searching \n(1/2): ");
+                    Console.Write("You only have time to search " + (i-1) +" more rooms. Would you like to \n1. Leave this building?\n2. Keep searching \n(1/2): ");
                     string leaveBuilding = Console.ReadLine();
                     if (leaveBuilding == "1")
                     {
@@ -250,7 +235,76 @@ namespace Hello_Dungeon
                 }
                 validInputRecieved = false;
             }
-            Console.WriteLine("You trace your steps back through the building a come back out the way you came.");
+        }
+        
+        public void Run()
+        {
+            health = 100;
+            sanity = 100;
+            string continueGame = "";
+            while (continueGame != "N")
+            {
+                StartMenu();
+
+                AskForWeapon();
+
+                Console.WriteLine("...");
+                Console.WriteLine("Do you hear that?");
+                Console.WriteLine("");
+
+                //The monster starts to sense the player
+                FirstEncounter();
+
+                //End of stage 1
+                Console.WriteLine("");
+                Console.WriteLine("---------------------------------------");
+                Console.WriteLine("-------------END OF STAGE 1------------");
+                Console.WriteLine("---------------------------------------");
+                Console.WriteLine("");
+                PrintPlayerStats();
+                Console.WriteLine("");
+                Console.WriteLine("Press ENTER to continue");
+                Console.ReadKey();
+                Console.Clear();
+
+                Console.WriteLine("---------------------------------------");
+                Console.WriteLine("------------START OF STAGE 2-----------");
+                Console.WriteLine("---------------------------------------");
+                Console.WriteLine("");
+                Console.WriteLine("Press ENTER to continue");
+                Console.ReadKey();
+                Console.Clear();
+
+                Console.WriteLine("You run away and find yourself upon an old building. You hear footsteps behind you. You rush forward into the first room.\n");
+
+                RoomJourney();
+
+                Console.WriteLine("You trace your steps back through the building and come back out the way you came.");
+                Console.WriteLine("");
+                Console
+                while (validInputRecieved == false)
+                {
+                    Console.Write("This is all there is in this beta build. Would you like to restart? (Y/N): ");
+                    continueGame = Console.ReadLine();
+                    if (continueGame == "Y")
+                    {
+                        Console.WriteLine("\nYou have chosen to restart. [REDACTED] reaches out and you grab it's hand. \n'It is time to reboot you now, little one'\n");
+                        Console.WriteLine("Press ENTER to continue");
+                        Console.ReadKey();
+                        Console.Clear();
+                        validInputRecieved = true;
+                    }
+                    else if (continueGame == "N")
+                    {
+
+                    }
+                    else
+                    {
+                        Console.WriteLine("ERROR | That is not a valid answer. Try again. | ERROR\n");
+                    }
+                }
+            }
+            
 
         }
     }
