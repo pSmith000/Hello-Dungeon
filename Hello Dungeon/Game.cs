@@ -85,6 +85,9 @@ namespace Hello_Dungeon
             return true;
         }
 
+        /// <summary>
+        /// This is the start menu where the player goes after each reset
+        /// </summary>
         void StartMenu()
         {
             //Welcome screen
@@ -99,6 +102,7 @@ namespace Hello_Dungeon
             Console.WriteLine("Welcome to the game " + name + ".\n'Death teaches th1ngs about l1fe in a way that life never can' - [REDACTED]\n");
             PrintPlayerStats();
         }
+
         /// <summary>
         /// Asks the player if they choose to have a weapon or not
         /// Sets the weapon variable to true if the player takes a weapon
@@ -119,6 +123,10 @@ namespace Hello_Dungeon
                 weapon = false;
                 Console.WriteLine("Hmmm, thats a choice " + name + "... Not a very good one if [REDACTED] comes for you.\n");
             }
+
+            Console.WriteLine("...");
+            Console.WriteLine("Do you hear that?");
+            Console.WriteLine("");
         }
 
         /// <summary>
@@ -143,6 +151,7 @@ namespace Hello_Dungeon
             //The monster actually attacks
             else if (run == 2)
             {
+                //if the player has a weapon and attacks back
                 Console.WriteLine("[REDACTED] is coming. You have no escape\n");
                 if (weapon)
                 {
@@ -161,6 +170,7 @@ namespace Hello_Dungeon
                 }
                 else
                 {
+                    //the player does not have a weapon
                     Console.WriteLine("");
                     Console.WriteLine("No weapon either... Only god can save you now");
                     Console.WriteLine("");
@@ -179,6 +189,10 @@ namespace Hello_Dungeon
             }
         }
 
+        /// <summary>
+        /// This is the function to go through 5 random rooms with a random number generator. 
+        /// The player has the option after each room to either leave or search another room
+        /// </summary>
         void RoomJourney()
         {
             validInputRecieved = false;
@@ -192,6 +206,9 @@ namespace Hello_Dungeon
 
                 if (room1 == 1)
                 {
+                    //Each of these rooms have a specific scene within them
+                    //this could either be good or bad for the player
+                    //this is the first room
                     Console.WriteLine("You walk in to a dimly lit room. A man stands before you bloodied and bruised." +
                         "\n He holds a sword in his hand. He slowly face you and says 'r-r-re b-boot?' The man then" +
                         "\n lunges at you.\n");
@@ -216,6 +233,7 @@ namespace Hello_Dungeon
                         sanity -= 15;
                     }
                 }
+                //The second room
                 else if (room1 == 2)
                 {
                     Console.WriteLine("You walk in to a room with a roaring fireplace and lush carpets. On the table you find a medkit and heal 20 health!");
@@ -225,6 +243,7 @@ namespace Hello_Dungeon
                         health = 100;
                     }
                 }
+                //the third room
                 else if (room1 == 3)
                 {
                     Console.WriteLine("You enter in a sanctuary of sorts. There are pews, symbolic pieces, and scripture on the walls. It feels safe. You regain 20 sanity.");
@@ -234,6 +253,7 @@ namespace Hello_Dungeon
                         sanity = 100;
                     }
                 }
+                //the fourth room
                 else if (room1 == 4)
                 {
                     Console.WriteLine("You walk in to a room that smells strongly of iron. It is too dark to see but the walls are covered in a warm liquid. \n" +
@@ -241,6 +261,7 @@ namespace Hello_Dungeon
                     Console.WriteLine("SUSTAIN 30 SANITY LOSS");
                     sanity -= 30;
                 }
+                //the fifth room
                 else if (room1 == 5)
                 {
                     Console.WriteLine("You stumble into a long hallway. As you walk down this dim lit path you find a sword lying on the ground.\n" +
@@ -258,6 +279,8 @@ namespace Hello_Dungeon
                 }
                 while (validInputRecieved == false)
                 {
+                    //the player gets 5 rooms in total to check, but at the risk of losing health or sanity
+                    //they get the coice here to either leave or search more rooms
                     Console.Write("You only have time to search " + (i-1) +" more rooms. Would you like to \n1. Leave this building?\n2. Keep searching \n> ");
                     string leaveBuilding = Console.ReadLine();
                     if (leaveBuilding == "1")
@@ -283,12 +306,100 @@ namespace Hello_Dungeon
         }
 
         /// <summary>
+        /// This is the boss battle. It gives the player lore and a small fight sequence
+        /// </summary>
+        void BossBattle1()
+        {
+            //The start of the boss 'cutscene'
+            Console.WriteLine("You trace your steps back and leave the way you came.");
+            Console.WriteLine("");
+            Console.WriteLine("You approach the darkness surrounding you. You look up and it meets your gaze. \n" 
+                + "[Redacted] stares not at you, but through you. Not through the player, but at you " + name +
+                ". \nThrough the very screen you stare at. \n[REDACTED] never leaves. \n[REDACTED] never falters.");
+
+            //getting input to see if the player wants to fight. the p[layer has no choice but to fight though
+            int input = GetInput("\n'Do you wish to fight?'", "Yes", "Yes");
+            Console.Clear();
+            if (input == 1)
+            {
+                //if the player wants to fight and has a weapon they get attacked heavily
+                //but if the player has no weapon than the enemy feels bad and doesn't attack as heavily
+                Console.WriteLine("\n'You shall regret the moment you ever looked at a screen'");
+                Console.WriteLine("");
+                Console.WriteLine("[REDACTED] charges at you and attacks, but halts its swing right before landing.");
+                Console.WriteLine("\n'Are you scared yet?'");
+                Console.WriteLine("\nPress ENTER to continue");
+                Console.ReadKey();
+                Console.Clear();
+
+                if (weapon == true)
+                {
+                    //The player has a weapon
+                    Console.WriteLine("\nYou take your weapon and swing right for it's throat. It seems to pass through like nothing was ever there.");
+                    Console.WriteLine("[REDACTED] makes a sound similar to human laughter");
+                    Console.WriteLine("\n'Do you not understand yet. I am [REDACTED] and this is my world!'");
+                    Console.WriteLine("\nYou watch as flesh gets torn from your body. Swing after swing this creature rips off more than you can take." +
+                        "\nYou black out.\n\nSUSTAIN 60 DAMAGE\nSUSTAIN 50 SANITY LOSS");
+                    Console.WriteLine("\n\nPress ENTER to continue");
+                    Console.ReadKey();
+                    Console.Clear();
+                    health -= 60;
+                    sanity -= 50;
+                    infection += 40;
+
+                    //Another player health and sanity check
+                    if (PlayerIsAlive() == false)
+                    {
+                        return;
+                    }
+
+
+                }
+                else
+                {
+                    //The player does not have a weapon
+                    Console.WriteLine("'You have no weapon to hold against me. I feel sorry for such a pitiful creature'");
+                    Console.WriteLine("'You hold not a candle to the power I hold. [REDACTED] goes beyond the screen and beyond this user." +
+                        "\nBeyond this game as you so call it. I shall try to spare your life with this next blow " + name + " if that even is " +
+                        "your real name. Hold on to your life so that I may play with it.'");
+                    Console.WriteLine("");
+                    Console.WriteLine("You feel a strike lay upon your chest. You begin to fall faint from such a quick blow." +
+                        "\nSUSTAIN 35 DAMAGE\nSUSTAIN 40 SANITY LOSS");
+                    Console.WriteLine("\n\nPress ENTER to continue");
+                    Console.ReadKey();
+                    Console.Clear();
+                }
+            }
+            else if (input == 2)
+            {
+                //if the play trie to hit the second yes ooption, which was in other questions the no option,
+                //then the enemy instantly kills the player
+                Console.WriteLine("'You tried not to fight me, didn't you. You tried to press no, but you couldn't. " +
+                    "\nSee what you don't understand is that I am all powerful. I am all encompassing. I am [REDACTED]." +
+                    "\nIf you were too afraid to fight me, then I won't even give you the chance. I shall reboot you now.");
+                Console.WriteLine("\nPress ENTER to reboot");
+                Console.ReadKey();
+                Console.Clear();
+                health -= 200;
+                sanity -= 200;
+                infection += 50;
+
+                if (PlayerIsAlive() == false)
+                {
+                    return;
+                }
+
+            }
+        }
+
+        /// <summary>
         /// Asks if player would like to restart game
         /// </summary>
         void RestartGame()
         {
             int continueGame = GetInput("This is all there is in the BETA build. Would you like to restart?", "Yes", "No");
 
+            //player chooses to restart, exiting the function and reitterating the while loop
             if (continueGame == 1)
             {
                 Console.WriteLine("\nYou have chosen to restart. [REDACTED] reaches out and you grab it's hand. \n'It is time to reboot you now, little one'\n");
@@ -296,26 +407,30 @@ namespace Hello_Dungeon
                 Console.ReadKey();
                 Console.Clear();
             }
+            //the game ends
             else if (continueGame == 2)
             {
+                //Setting gameOver to false to end the game
+                Console.WriteLine("You have chosen the easy way out this time...\nNext time you won't be so lucky."+
+                    "\n\nPress ENTER to end this world");
+                Console.ReadKey();
+                Console.Clear();
                 gameOver = false;
             }
         }
         
         public void Run()
         {
+            //The main code uses gameOver boolean for checking if the game has ended yet
             while (gameOver != false)
             {
+                //resets health and sanity but not infection. That lasts through games
                 health = 100;
                 sanity = 100;
 
                 StartMenu();
 
                 AskForWeapon();
-
-                Console.WriteLine("...");
-                Console.WriteLine("Do you hear that?");
-                Console.WriteLine("");
 
                 //The monster starts to sense the player
                 FirstEncounter();
@@ -331,6 +446,7 @@ namespace Hello_Dungeon
                 Console.ReadKey();
                 Console.Clear();
 
+                //Start screen for stage 2
                 Console.WriteLine("---------------------------------------");
                 Console.WriteLine("------------START OF STAGE 2-----------");
                 Console.WriteLine("---------------------------------------");
@@ -341,7 +457,40 @@ namespace Hello_Dungeon
 
                 RoomJourney();
 
+                Console.Clear();
+
+                //End screen for stage 2
+                Console.WriteLine("---------------------------------------");
+                Console.WriteLine("-------------END OF STAGE 2------------");
+                Console.WriteLine("---------------------------------------");
                 Console.WriteLine("");
+                PrintPlayerStats();
+                Console.WriteLine("");
+                Console.WriteLine("Press ENTER to continue");
+                Console.ReadKey();
+                Console.Clear();
+
+                //Start screen for stage 3
+                Console.WriteLine("---------------------------------------");
+                Console.WriteLine("------------START OF STAGE 3-----------");
+                Console.WriteLine("---------------------------------------");
+                Console.WriteLine("");
+                Console.WriteLine("Press ENTER to continue");
+                Console.ReadKey();
+                Console.Clear();
+
+                BossBattle1();
+
+                //End screen for stage 3
+                Console.WriteLine("---------------------------------------");
+                Console.WriteLine("-------------END OF STAGE 3------------");
+                Console.WriteLine("---------------------------------------");
+                Console.WriteLine("");
+                PrintPlayerStats();
+                Console.WriteLine("");
+                Console.WriteLine("Press ENTER to continue");
+                Console.ReadKey();
+                Console.Clear();
 
                 RestartGame();
             }
