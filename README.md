@@ -12,4 +12,4 @@ Hello Dungeon is a mild horror text based adventure game.
 
 - Type your name when directed to
 - All of the next questions can be answered with either a "1" or a "2"
-- Restart as many times as you want (the end may not be the end)
+- Restart as many times as you want (the end may not be the end) 
