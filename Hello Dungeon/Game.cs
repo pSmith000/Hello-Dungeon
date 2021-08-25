@@ -305,6 +305,7 @@ namespace Hello_Dungeon
                     if (leaveBuilding == "1")
                     {
                         i = 0;
+                        Console.Clear();
                         break;
                     }
                     else if (leaveBuilding == "2")
@@ -413,6 +414,11 @@ namespace Hello_Dungeon
                 sanity -= 200;
                 infection += 50;
 
+                if (PlayerIsAlive() == false)
+                {
+                    return;
+                }
+
             }
         }
 
@@ -470,13 +476,10 @@ namespace Hello_Dungeon
             Console.Clear();
         }
 
-        
-        public void Run()
+        void DisplayCurrentStage()
         {
-            //The main code uses gameOver boolean for checking if the game has ended yet
-            while (gameOver != false)
+            if (stageCounter == 1)
             {
-                //resets health and sanity but not infection. That lasts through games
                 health = 100;
                 sanity = 100;
 
@@ -484,16 +487,29 @@ namespace Hello_Dungeon
 
                 AskForWeapon();
 
-                //The monster starts to sense the player
                 FirstEncounter();
-
                 StageMenu();
-
+            }
+            if (stageCounter == 2)
+            {
                 RoomJourney();
+                StageMenu();
+            }
+            if (stageCounter == 3)
+            {
+                BossBattle1();
+                StageMenu();
+            }
+        }
+        
+        public void Run()
+        {
+            //The main code uses gameOver boolean for checking if the game has ended yet
+            while (gameOver != false)
+            {
+                DisplayCurrentStage();
 
-                Console.Clear();
-
-                if (PlayerIsAlive() == false)
+                if (PlayerIsAlive() == false || stageCounter == 4)
                 {
                     if (RestartGame() == false)
                     {
@@ -505,36 +521,10 @@ namespace Hello_Dungeon
                         continue;
                     }
                 }
-
-                StageMenu();
-
-                BossBattle1();
-
-                if(PlayerIsAlive() == false)
+                else
                 {
-                    if (RestartGame() == false)
-                    {
-                        break;
-                    }
-
-                    else
-                    {
-                        continue;
-                    }
+                    stageCounter++;
                 }
-
-                //End screen for stage 3
-                Console.WriteLine("---------------------------------------");
-                Console.WriteLine("-------------END OF STAGE 3------------");
-                Console.WriteLine("---------------------------------------");
-                Console.WriteLine("");
-                PrintPlayerStats();
-                Console.WriteLine("");
-                Console.WriteLine("Press ENTER to continue");
-                Console.ReadKey();
-                Console.Clear();
-
-                RestartGame();
             }
             
 
