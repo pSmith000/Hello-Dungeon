@@ -15,6 +15,7 @@ namespace Hello_Dungeon
         string name = "";
         bool weapon = false;
         bool gameOver = true;
+        int stageCounter = 1;
 
         /// <summary>
         /// Getting input from the player at any point in the code
@@ -81,6 +82,19 @@ namespace Hello_Dungeon
             {
                 Console.WriteLine("You have perished\n");
                 return false;
+            }
+
+            else if (infection >= 100)
+            {
+                Console.WriteLine("[REDACTED] has corrupted your thoughts. It has been in your brain this whole time.");
+                Console.WriteLine("The end truly was not the end. You have been...");
+                Console.WriteLine("\nPress ENTER to become INFECTED");
+                Console.ReadKey();
+
+                while (infection >= 100)
+                {
+                    Console.WriteLine("INFECTION INFECTION INFECTION INFECTION INFECTION INFECTION");
+                }
             }
             return true;
         }
@@ -196,6 +210,7 @@ namespace Hello_Dungeon
         void RoomJourney()
         {
             validInputRecieved = false;
+            stageCounter = 2;
 
             //Random Room Generator
 
@@ -270,6 +285,10 @@ namespace Hello_Dungeon
                 }
                 Console.WriteLine("");
 
+                Console.WriteLine("Press ENTER to continue");
+                Console.ReadKey();
+                Console.Clear();
+
                 PrintPlayerStats();
 
                 //If the player is dead the function breaks and goes directly to the RestartGame function
@@ -310,6 +329,7 @@ namespace Hello_Dungeon
         /// </summary>
         void BossBattle1()
         {
+            stageCounter = 3;
             //The start of the boss 'cutscene'
             Console.WriteLine("You trace your steps back and leave the way you came.");
             Console.WriteLine("");
@@ -368,26 +388,30 @@ namespace Hello_Dungeon
                     Console.WriteLine("\n\nPress ENTER to continue");
                     Console.ReadKey();
                     Console.Clear();
+                    health -= 35;
+                    sanity -= 40;
+                    infection += 20;
+
+                    //Another player health and sanity check
+                    if (PlayerIsAlive() == false)
+                    {
+                        return;
+                    }
                 }
             }
             else if (input == 2)
             {
-                //if the play trie to hit the second yes ooption, which was in other questions the no option,
+                //if the play trie to hit the second yes option, which was in other questions the no option,
                 //then the enemy instantly kills the player
                 Console.WriteLine("'You tried not to fight me, didn't you. You tried to press no, but you couldn't. " +
                     "\nSee what you don't understand is that I am all powerful. I am all encompassing. I am [REDACTED]." +
                     "\nIf you were too afraid to fight me, then I won't even give you the chance. I shall reboot you now.");
-                Console.WriteLine("\nPress ENTER to reboot");
+                Console.WriteLine("\n\nPress ENTER to reboot");
                 Console.ReadKey();
                 Console.Clear();
                 health -= 200;
                 sanity -= 200;
                 infection += 50;
-
-                if (PlayerIsAlive() == false)
-                {
-                    return;
-                }
 
             }
         }
@@ -395,9 +419,10 @@ namespace Hello_Dungeon
         /// <summary>
         /// Asks if player would like to restart game
         /// </summary>
-        void RestartGame()
+        bool RestartGame()
         {
             int continueGame = GetInput("This is all there is in the BETA build. Would you like to restart?", "Yes", "No");
+            bool choice = false;
 
             //player chooses to restart, exiting the function and reitterating the while loop
             if (continueGame == 1)
@@ -406,6 +431,7 @@ namespace Hello_Dungeon
                 Console.WriteLine("Press ENTER to continue");
                 Console.ReadKey();
                 Console.Clear();
+                choice = true;
             }
             //the game ends
             else if (continueGame == 2)
@@ -416,8 +442,34 @@ namespace Hello_Dungeon
                 Console.ReadKey();
                 Console.Clear();
                 gameOver = false;
+                choice = false;
             }
+            return choice;
         }
+
+        void StageMenu() 
+        {
+            //End of stage x
+            Console.WriteLine("---------------------------------------");
+            Console.WriteLine("-------------END OF STAGE " + stageCounter + "------------");
+            Console.WriteLine("---------------------------------------");
+            Console.WriteLine("");
+            PrintPlayerStats();
+            Console.WriteLine("");
+            Console.WriteLine("Press ENTER to continue");
+            Console.ReadKey();
+            Console.Clear();
+
+            //Start screen for stage x
+            Console.WriteLine("---------------------------------------");
+            Console.WriteLine("------------START OF STAGE " + (stageCounter + 1) + "-----------");
+            Console.WriteLine("---------------------------------------");
+            Console.WriteLine("");
+            Console.WriteLine("Press ENTER to continue");
+            Console.ReadKey();
+            Console.Clear();
+        }
+
         
         public void Run()
         {
@@ -435,51 +487,41 @@ namespace Hello_Dungeon
                 //The monster starts to sense the player
                 FirstEncounter();
 
-                //End of stage 1
-                Console.WriteLine("---------------------------------------");
-                Console.WriteLine("-------------END OF STAGE 1------------");
-                Console.WriteLine("---------------------------------------");
-                Console.WriteLine("");
-                PrintPlayerStats();
-                Console.WriteLine("");
-                Console.WriteLine("Press ENTER to continue");
-                Console.ReadKey();
-                Console.Clear();
-
-                //Start screen for stage 2
-                Console.WriteLine("---------------------------------------");
-                Console.WriteLine("------------START OF STAGE 2-----------");
-                Console.WriteLine("---------------------------------------");
-                Console.WriteLine("");
-                Console.WriteLine("Press ENTER to continue");
-                Console.ReadKey();
-                Console.Clear();
+                StageMenu();
 
                 RoomJourney();
 
                 Console.Clear();
 
-                //End screen for stage 2
-                Console.WriteLine("---------------------------------------");
-                Console.WriteLine("-------------END OF STAGE 2------------");
-                Console.WriteLine("---------------------------------------");
-                Console.WriteLine("");
-                PrintPlayerStats();
-                Console.WriteLine("");
-                Console.WriteLine("Press ENTER to continue");
-                Console.ReadKey();
-                Console.Clear();
+                if (PlayerIsAlive() == false)
+                {
+                    if (RestartGame() == false)
+                    {
+                        break;
+                    }
+                    
+                    else
+                    {
+                        continue;
+                    }
+                }
 
-                //Start screen for stage 3
-                Console.WriteLine("---------------------------------------");
-                Console.WriteLine("------------START OF STAGE 3-----------");
-                Console.WriteLine("---------------------------------------");
-                Console.WriteLine("");
-                Console.WriteLine("Press ENTER to continue");
-                Console.ReadKey();
-                Console.Clear();
+                StageMenu();
 
                 BossBattle1();
+
+                if(PlayerIsAlive() == false)
+                {
+                    if (RestartGame() == false)
+                    {
+                        break;
+                    }
+
+                    else
+                    {
+                        continue;
+                    }
+                }
 
                 //End screen for stage 3
                 Console.WriteLine("---------------------------------------");
