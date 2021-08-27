@@ -80,7 +80,6 @@ namespace Hello_Dungeon
         {
             if (health <= 0 || sanity <= 0)
             {
-                Console.WriteLine("You have perished\n");
                 return false;
             }
 
@@ -283,6 +282,11 @@ namespace Hello_Dungeon
                         "You may take it if you do not have a weapon already.");
                     weapon = true;
                 }
+                //the sixth room
+                else if (room1 == 6)
+                {
+                    Console.WriteLine("Walking into this room");
+                }
                 Console.WriteLine("");
 
                 Console.WriteLine("Press ENTER to continue");
@@ -294,6 +298,7 @@ namespace Hello_Dungeon
                 //If the player is dead the function breaks and goes directly to the RestartGame function
                 if (PlayerIsAlive() == false)
                 {
+                    Console.WriteLine("You have perished\n");
                     return;
                 }
                 while (validInputRecieved == false)
@@ -427,7 +432,7 @@ namespace Hello_Dungeon
         /// </summary>
         bool RestartGame()
         {
-            int continueGame = GetInput("This is all there is in the BETA build. Would you like to restart?", "Yes", "No");
+            int continueGame = GetInput("\nThis is all there is in the BETA build. Would you like to restart?", "Yes", "No");
             bool choice = false;
 
             //player chooses to restart, exiting the function and reitterating the while loop
@@ -498,7 +503,11 @@ namespace Hello_Dungeon
             if (stageCounter == 3)
             {
                 BossBattle1();
-                StageMenu();
+                if (PlayerIsAlive() == true)
+                {
+                    StageMenu();
+                }
+                
             }
         }
         
@@ -511,6 +520,8 @@ namespace Hello_Dungeon
 
                 if (PlayerIsAlive() == false || stageCounter == 4)
                 {
+                    Console.WriteLine("You have perished\n");
+                    PrintPlayerStats();
                     if (RestartGame() == false)
                     {
                         break;
@@ -518,6 +529,7 @@ namespace Hello_Dungeon
                     
                     else
                     {
+                        stageCounter = 1;
                         continue;
                     }
                 }
