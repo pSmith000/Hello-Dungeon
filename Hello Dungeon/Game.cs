@@ -8,6 +8,7 @@ namespace Hello_Dungeon
     {
         //Initialize variables
         int health = 100;
+
         int sanity = 100;
         float infection = 1;
         bool validInputRecieved = false;
@@ -216,7 +217,7 @@ namespace Hello_Dungeon
             for (int i = 5; i > 0; i--)
             {
                 Random rnd = new Random();
-                int room1 = rnd.Next(1, 5);
+                int room1 = rnd.Next(1, 6);
 
                 if (room1 == 1)
                 {
@@ -285,7 +286,23 @@ namespace Hello_Dungeon
                 //the sixth room
                 else if (room1 == 6)
                 {
-                    Console.WriteLine("Walking into this room");
+                    Console.WriteLine("Walking into this room you smell tar and asphalt. The air is humid and thick. Breathing is an almost impossible task. " +
+                        "\nYou see a vial of purple sludge on the ground half spilled over. You inspect it. \n");
+
+                    int input = GetInput("Would you like to drink?", "Yes", "No");
+
+                    if (input == 1)
+                    {
+                        Console.WriteLine("\nYou decide to drink this putrid liquid. As it goes down your esophagus it has the taste of rotting flesh and the consistancy of spoiled milk." +
+                            "\nImmediately you vomit. What comes out is a viscous black liquid. As this matter leaves your body, your mind feels less cluttered.");
+                        infection -= 15;
+                    }
+
+                    else if (input == 2)
+                    {
+                        Console.WriteLine("\nYou use your better judgement and decide not to drink the vial of mysterious liquid." +
+                            "\nYou move forward.");
+                    }
                 }
                 Console.WriteLine("");
 
